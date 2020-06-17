@@ -8,7 +8,6 @@ class PictureModel(db.Model):
     filename = db.Column(db.String(100), nullable=False)
     path = db.Column(db.String(100))
 
-
     website_id = db.Column(db.Integer, db.ForeignKey('websites.id'))
     website = db.relationship('WebsiteModel')
 

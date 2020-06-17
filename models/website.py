@@ -2,7 +2,6 @@ from db import db
 import uuid
 
 
-
 class WebsiteModel(db.Model):
     __tablename__ = 'websites'
 
