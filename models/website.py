@@ -1,16 +1,20 @@
-from db import db
 import uuid
+from sqlalchemy.sql import func
+
+from db import db
 
 
 class WebsiteModel(db.Model):
     __tablename__ = 'websites'
 
+    # We can add the same site multiple times, because behind the same url we can scrap different content
     id = db.Column(db.Integer, primary_key=True)
     src = db.Column(db.String(150), nullable=False)
     uuid = db.Column(db.String(40), nullable=False)
-    # TODO: add timestamp info, page text etc
+    time_created = db.Column(db.DateTime(timezone=True), server_default=func.now())
+    content = db.Column(db.String())
 
-    pictures = db.relationship('PictureModel', lazy='dynamic')
+    pictures = db.relationship('PictureModel', lazy='dynamic', cascade="all, delete")
 
     def __init__(self, src):
         self.src = src
@@ -20,6 +24,7 @@ class WebsiteModel(db.Model):
         return {
             'src': self.src,
             'uuid': self.uuid,
+            'time': str(self.time_created),
             'pictures': [picture.json() for picture in self.pictures.all()]
         }
 

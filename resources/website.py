@@ -4,6 +4,9 @@ from flask_jwt import jwt_required
 from models.website import WebsiteModel
 from models.picture import PictureModel
 
+from web_scraping import scrap_images, scrap_text
+
+
 class Website(Resource):
     parser = reqparse.RequestParser()
     parser.add_argument(
@@ -30,14 +33,15 @@ class Website(Resource):
         try:
             site.save_to_db()
         except:
-            return {'message': 'An error occured while creating the new site resource.'}, 500
+            return {'message': 'An error occurred while creating the new site resource.'}, 500
 
         # scrapping site & adding pictures
-        picture = PictureModel(filename='example', path='path', website_id=site.id)
-        #TODO: check if such picture already exists in the db by hashing it
+        images = scrap_images(url=payload['src'])  # TODO: check if such picture already exists in the db by hashing it
 
-        # save picture to db
-        picture.save_to_db()
+        # save each picture info to the db
+        for img in images:
+            picture = PictureModel(**img, website_id=site.id)
+            picture.save_to_db()
 
         return site.json(), 201
 
@@ -46,7 +50,8 @@ class Website(Resource):
         if website:
             website.delete_from_db()
             return {'message': f"Website {website.json()['src']} was successfully deleted from the service."}
-        return {'messgae': f"Website not found."}
+        return {'message': f"Website not found."}
+
 
 class WebsiteList(Resource):
     def get(self):

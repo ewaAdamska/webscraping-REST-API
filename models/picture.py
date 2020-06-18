@@ -7,17 +7,18 @@ class PictureModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     filename = db.Column(db.String(100), nullable=False)
     path = db.Column(db.String(100))
+    size = db.Column(db.Integer)
 
     website_id = db.Column(db.Integer, db.ForeignKey('websites.id'))
-    website = db.relationship('WebsiteModel')
 
-    def __init__(self, filename, path, website_id):
+    def __init__(self, filename, path, size, website_id):
         self.filename = filename
         self.path = path
+        self.size = size
         self.website_id = website_id
 
     def json(self):
-        return {'filename': self.filename, 'path': self.path}
+        return {'filename': self.filename, 'path': self.path, 'size': self.size}
 
     @classmethod
     def find_by_name(cls, filename):  # TODO: correct it since there is no picture name

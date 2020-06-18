@@ -26,7 +26,8 @@ api.add_resource(Website, '/website', '/website/<string:uuid>')
 api.add_resource(Picture, '/item/<string:name>')
 api.add_resource(WebsiteList, '/websites')
 api.add_resource(PictureList, '/pictures')
-api.add_resource(UserRegister, '/register')
+api.add_resource(UserRegister, '/register')  # TODO: Add content (page text) resource
+
 
 if __name__ == '__main__':
     db.init_app(app)
