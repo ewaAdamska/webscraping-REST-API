@@ -3,3 +3,4 @@ venv
 .idea
 *.pyc
 data.db
+Images
